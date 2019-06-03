@@ -23,8 +23,8 @@
  #define EC_Y        "db1ac28167ad41aec921cd87a82594cbd396b27e054c318458f12354f86c6919"
 #else
 #define HASHMSG     "000000000000000000000000000000000000004b5a656e204e6574776f726b73"
-#define EC_R        "a878b8ba94506ad8b8d703bbf11cca96b3da2b6a8deae4bf70f8e0cac200494b"
-#define EC_S        "1e2d6005c84bbd0ffc8c261ded704c33b091cbcbeb0362c3bf8f37946ebaf76e"
+#define EC_R        "d2057447a843af3b71382dc8eec64b2908a86732d073a3cd0cdad0f368f3a08a"
+#define EC_S        "6ebe1bbb6ff7ad9bfa7a35f075332ddb90bcd0e05994e0eeddb0a909631fff67"
 #define EC_X        "2705a077a1d516d406f36bd50421a2ebd5035d30085e010e0d8130504bb031df"
 #define EC_Y        "db1ac28167ad41aec921cd87a82594cbd396b27e054c318458f12354f86c6919"
 #endif
@@ -40,7 +40,7 @@
 
 
 
-int verify();
+int verifysig(std::string R, std::string S);
 
 int main(int argc, char *argv[]) {    
 /*
@@ -85,7 +85,15 @@ int main(int argc, char *argv[]) {
     std::cout << "Address: " << address << std::endl;    
 */
 
-    if( verify() )
+    std::string r = EC_R;
+    std::string s = EC_S;
+    if( argc > 1 )
+    {
+        r = argv[1];
+        s = argv[2];
+    }
+
+    if( verifysig(r, s) )
     {
         std::cout << "verify succeed" << std::endl;    
     }
@@ -135,7 +143,7 @@ int verify()
 }
 */
 
-int verify()
+int verifysig(std::string R, std::string S)
 {
     std::cout << "*************** verify signature ***************************" << std::endl;
     bc::system::ec_uncompressed point;
@@ -144,8 +152,8 @@ int verify()
     bc::system::hash_digest r,s,x,y, hash;
     bc::system::hash_digest rr,sr,xr,yr, hashr;
 
-    bc::system::decode_hash(r, EC_R);
-    bc::system::decode_hash(s, EC_S);
+    bc::system::decode_hash(r, R);
+    bc::system::decode_hash(s, S);
     bc::system::decode_hash(x, EC_X);
     bc::system::decode_hash(y, EC_Y);
     bc::system::decode_hash(hash, HASHMSG);
